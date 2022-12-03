@@ -93,8 +93,7 @@ docker-compose exec web python manage.py collectstatic --no-input
 ```
 docker-compose exec web python manage.py loaddata fixtures.json
 ```
-Для остановки контейнеров:
-```
+
 ### Автор дополнения для автоматизированного развёртывания на удаленном сервере Ubuntu при помощи GitHub Actions
 - [Полина Костина], студентка Яндекс Практикума
 
