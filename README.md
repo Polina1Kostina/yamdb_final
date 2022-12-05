@@ -1,4 +1,4 @@
-# yamdb_final
+# CI и CD проекта api_yamdb
 Сервис, полностью построенный на API позволяет добавлять в каталог различные произведения, оставлять на них отзывы и видеть динамически собранную оценку. Настроены права доступа для различных категорий пользователей.
 ### Описание
 В данном проекте описаны программы для автоматизированного развёртывания сервиса API на удаленном сервере Ubuntu при помощи GitHub Actions. Добавлены команды последовательно запускающие после пушинга: проверку на стандартизацию pep8 и тестирование кода; загрузку на DockerHub, деплой контейнера с DockerHub на боевой сервер и отправку оповещения в telegram об успешном запуске.
@@ -75,22 +75,82 @@ TELEGRAM_TOKEN # токен вашего бота
 ```
 После успешного деплоя создайте и выполните миграции:
 ```
-docker-compose exec web python manage.py makemigrations
+sudo docker-compose exec web python manage.py makemigrations
 ```
 ```
-docker-compose exec web python manage.py migrate
+sudo docker-compose exec web python manage.py migrate
 ```
 Создайте суперпользователя:
 ```
-docker-compose exec web python manage.py createsuperuser
+sudo docker-compose exec web python manage.py createsuperuser
 ```
 Соберите статические файлы:
 ```
-docker-compose exec web python manage.py collectstatic --no-input
+sudo docker-compose exec web python manage.py collectstatic --no-input
 ```
 Если вы хотите наполнить базу данными из фикстур:
 ```
-docker-compose exec web python manage.py loaddata fixtures.json
+sudo docker-compose exec web python manage.py loaddata fixtures.json
+```
+Запустить контейнеры:
+```
+sudo docker-compose start
+```
+Для остановки контейнеров:
+```
+sudo docker-compose stop
+```
+___
+### Примеры GET запросов
+Для получения списка доступных адресов отправьте запрос:
+```
+http://host/api/v1/
+```
+Пример ответа на запрос о получении списка доступных адресов в формате json:
+```
+{
+    "users": "http://host/api/v1/users/",
+    "titles": "http://host/api/v1/titles/",
+    "categories": "http://host/api/v1/categories/",
+    "genres": "http://host/api/v1/genres/"
+}
+```
+Для получения всех произведений:
+```
+GET http://host/api/v1/titles/
+```
+Пример ответа на запрос о получении всех произведений в формате json:
+```
+[
+    {
+        "count": 1,
+        "next": "Null",
+        "previous": "Null",
+        "results": [
+            {
+                "id": 1,
+                "name": "The best team",
+                "year": 2022,
+                "rating": 10,
+                "description": "Little story about dev team",
+                "genre": [
+                    {
+                        "name": "Adventure",
+                        "slug": "adventure"
+                    }
+                ],
+                "category": {
+                "name": "IT",
+                "slug": "it"
+                }
+            }
+        ]
+    }
+]
+```
+Все виды запросов и их описание доступно в документации по адресу:
+```
+http://host/redoc/
 ```
 
 ### Автор дополнения для автоматизированного развёртывания на удаленном сервере Ubuntu при помощи GitHub Actions
